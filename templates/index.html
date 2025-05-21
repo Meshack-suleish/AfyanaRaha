@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+  <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+  <!-- Font Awesome CSS -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/herbal.css')}}">
+    <style>
+      .fixed-img {
+        height: 100%;         
+        width: 100%;           
+      }
+
+    .card {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+   }
+
+   .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+   }
+    
+      .card.h-100 {
+        height: 500px;          
+        display: flex;
+        flex-direction: column;
+      }
+    
+      .card-body {
+        flex-grow: 1;
+      }
+      .btn{
+        border-radius: 10px;
+      }
+    </style>
+    
+    
+</head>
+<body>
+    <header>
+    <div class="scrolling-text">
+    {% if texts %}
+        <span>{{ texts[0].content }}</span>
+        <span></span>
+    {% endif %}
+</div>
+    </header>
+   
+       {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+ <!-- Nav Bar -->
+ <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Afya na Raha</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link active" aria-current="page" href="#">Home</a>
+        <a class="nav-link" href="#contact-us">Wasiliana nasi</a>
+        <a class="nav-link" href="#services">Huduma zetu</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- End of nav Bar -->
+
+<!-- Start of carousel -->
+<!-- <div class="background-img">
+  <div class="slider-img">
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        {% for image in images %}
+          <div class="carousel-item {% if loop.first %}active{% endif %}" data-bs-interval="3000">
+            <img src="{{ url_for('static', filename=image.filename) }}" class="d-block w-100" alt="..." style="width: 100%; height: auto;">
+          </div>
+        {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</div> -->
+
+    <!-- End of carousel -->
+   
+ <!-- Filter/Search Section -->
+ <main>
+<div class="container my-4">
+  <h3 class="mb-3">Tafuta dawa ikufikie popote ulipo</h3>
+  <form id="searchForm" class="d-flex mb-4" role="search" method="GET" action="{{ url_for('index') }}#post-container">
+    <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search" value="{{ request.args.get('q', '') }}">
+    <button class="btn btn-success" type="submit" >Tafuta</button>
+  </form>
+  
+
+  <!-- Category Filter Buttons -->
+  <div class="filter">
+    <ul class="nav nav-underline justify-content-center">
+      <li class="nav-item">
+        <a class="nav-link active" href="#" onclick="filterPosts('');event.preventDefault()">Wote</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick="filterPosts('wanawake');event.preventDefault()">Wanawake</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" onclick="filterPosts('wanaume');event.preventDefault()">Wanaume</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="#" onclick="filterPosts('watoto');event.preventDefault()">Watoto</a>
+      </li> -->
+    </ul>    
+  </div>  
+
+
+   <!-- Start of posts -->
+<div class="row" id="post-container">
+  {% if posts %}
+  {% for post in posts %}
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="card h-100">
+      <div style="width: 100%; height: 200px;">
+      <img src="{{ url_for('static', filename=post.image_url) }}" class="card-img-top fixed-img" alt="picha ya dawa..." >
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{post.title}}</h5>
+        <p class="card-text">{{post.description}}.</p>
+        <p class="card-text d-flex gap-3 align-items-center">
+          <small class="text-body-secondary">
+            <a href="https://wa.me/{{ user.phone_number }}" target="_blank" class="text-success text-decoration-none">
+             WhatsApp {{ user.phone_number }}
+            </a>
+            </small>
+
+          <a href="#" class="btn btn-outline-success btn-sm" 
+          data-bs-toggle="modal" 
+          data-bs-target="#orderModal" 
+          data-post-id="{{ post.post_id }}"
+          data-post-title="{{ post.title }}">
+          Weka order
+       </a>   
+        </p>        
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="col-12 text-center my-5">
+    <h4 class="text-muted">Hakuna Dawa kwa sasa.</h4>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Modal Structure -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="/place-order" class="modal-content needs-validation" novalidate>
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderModalLabel">Weka Order</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body">
+        <input type="hidden" name="post_id" id="modalPostId"> 
+        <input type="hidden" name="post_title" id="modalPostTitle"> 
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Jina</label>
+          <input type="text" class="form-control" id="name"  name="name" required>
+          <div class="invalid-feedback">Tafadhali jaza jina lako.</div>
+        </div>
+        <div class="mb-3">
+          <label for="phoneNumber" class="form-label">Nambari ya simu</label>
+          <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" pattern="[0-9]{10}" required>
+          <div class="invalid-feedback">Tafadhali weka namba ya simu yenye tarakimu 10 .</div>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email (kama unayo)</label>
+          <input type="email" class="form-control" id="email" name="email">
+          <div class="invalid-feedback">Weka email sahihi.</div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Tuma order</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- End of posts -->
+
+<!-- pagination -->
+<div class="container my-5">
+  <!-- Pagination Layout -->
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      {% if posts.has_prev %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('index', page=posts.prev_num, category=category, q=search_query) }}#post-container">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+        </li>
+      {% endif %}
+  
+      {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+        {% if page_num %}
+          <li class="page-item {% if posts.page == page_num %}active{% endif %}">
+            <a class="page-link" href="{{ url_for('index', page=page_num, category=category, q=search_query) }}#post-container">{{ page_num }}</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
+      {% endfor %}
+  
+      {% if posts.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{{ url_for('index', page=posts.next_num, category=category, q=search_query)}}#post-container ">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Next</span>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+  
+</div>
+<!-- end of pagination -->
+   <h2 class="text-center"> Pata huduma Zaidi</h2>
+    <!-- Start of services -->
+    <div class="services" id="services">
+    <div class="service-item">
+      <i class="fas fa-hands-helping"></i>
+      <div><strong>Ushauri Nasaha</strong></div>
+      <p>Huduma ya ushauri kwa afya ya akili na ustawi wa jamii.</p>
+    </div>
+    <div class="service-item">
+      <i class="fas fa-praying-hands"></i>
+      <div><strong>Huduma ya Maombi</strong></div>
+      <p>Omba pamoja nasi kwa mahitaji yako ya kiroho na mwongozo.</p>
+    </div>
+    <div class="service-item">
+      <i class="fas fa-pills"></i>
+      <div><strong>Wasambazaji wa Dawa</strong></div>
+      <p>Tunatoa dawa muhimu kwa bei nafuu kwa jamii yote.</p>
+    </div>
+  </div>
+   <!-- End of services -->
+
+   <div class="container my-5" id="contact-us">
+    <div class="row">
+      <!-- Left Column: Contact Form -->
+      <div class="col-12 col-lg-6 mb-4">
+        <h2>Wasiliana nasi</h2>
+        <form action="/contact" method="POST">
+          <div class="mb-3">
+            <label for="name" class="form-label">Jina</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="" required>
+          </div>
+            <div class="mb-3">
+            <label for="email" class="form-label">Email address (kama unayo)</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="">
+          </div>
+            <div class="mb-3">
+            <label for="phone" class="form-label">Namba ya simu</label>
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="" required>
+          </div>
+            <div class="mb-3">
+            <label for="message" class="form-label">Ujumbe</label>
+            <textarea class="form-control" id="message" name="message" rows="4" placeholder="ujumbe wako" required></textarea>
+          </div>
+            <button type="submit" class="btn btn-primary">Tuma ujumbe</button>
+        </form>
+      </div>
+  
+      <!-- Right Column: Placeholder Content -->
+<div class="col-12 col-lg-6 text-center">
+  <h3>Msaada wa haraka</h3>
+  <p>Unaweza kutupigia simu au kufika ofisini kwetu kwa msaada wa haraka zaidi.</p>
+
+  <ul class="list-group mb-4">
+    <li class="list-group-item">
+      <i class="bi bi-telephone-fill me-2 text-primary"></i>Simu: {{user.phone_number}}
+    </li>
+    <li class="list-group-item">
+      <i class="bi bi-envelope-fill me-2 text-danger"></i>Email: {{user.email}}
+    </li>
+    <li class="list-group-item">
+      <i class="bi bi-geo-alt-fill me-2 text-success"></i>Anwani: Mtaa wa Bondeni, Iringa
+    </li>
+  </ul>
+
+  <h5>Tuandikie kwenye mitandao ya kijamii:</h5>
+  <div class="d-flex d-flex justify-content-center gap-3 mt-2">
+    <a href="https://facebook.com/james ombelo" target="_blank" class="text-decoration-none text-primary">
+      <i class="bi bi-facebook fs-4"></i>
+    </a>
+    <a href="https://instagram.com/ombello_jm" target="_blank" class="text-decoration-none text-danger">
+      <i class="bi bi-instagram fs-4"></i>
+    </a>
+    <a href="https://twitter.com/meshack_suleish" target="_blank" class="text-decoration-none text-info">
+      <i class="bi bi-twitter fs-4"></i>
+    </a>
+    <a href="https://wa.me/{{user.phone_number}}" target="_blank" class="text-decoration-none text-success">
+      <i class="bi bi-whatsapp fs-4"></i>
+    </a>
+  </div>
+</div>
+
+    </div>
+  </div>
+  
+</main>
+
+    <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+    <p class="mb-0">&copy; <span id="year"></span> Afya na Raha.</p>
+    </div>
+  </footer>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+
+</body>
+  <script>
+    function filterPosts(category) {
+      const url = category ? `/?category=${category}` : '/';
+      
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const newPosts = doc.getElementById('post-container').innerHTML;
+          document.getElementById('post-container').innerHTML = newPosts;
+    
+          // Update active link
+          document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+          const active = category || 'wote';
+          [...document.querySelectorAll('.nav-link')].forEach(link => {
+            if (link.textContent.trim().toLowerCase() === active.toLowerCase()) {
+              link.classList.add('active');
+            }
+          });
+        })
+        .catch(error => console.error('Error fetching posts:', error));
+    }
+   
+  (() => {
+    'use strict'
+    const forms = document.querySelectorAll('.needs-validation')
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+        form.classList.add('was-validated')
+      }, false)
+    })
+  })()
+
+  const orderModal = document.getElementById('orderModal');
+  orderModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget; 
+    const postId = button.getAttribute('data-post-id');
+    const postTitle = button.getAttribute('data-post-title');
+    const modalPostIdInput = orderModal.querySelector('#modalPostId');
+    const modalPostTitleInput = orderModal.querySelector('#modalPostTitle');
+    modalPostIdInput.value = postId;
+    modalPostTitleInput.value = postTitle;
+  });
+
+  //  contact us form validation
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector('form[action="/contact"]');
+    
+    form.addEventListener("submit", function (event) {
+      let isValid = true;
+      let errors = [];
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      // Validate name
+      // if (name === "") {
+      //   isValid = false;
+      //   errors.push("Tafadhali andika jina lako.");
+      // }
+
+      // Validate email only if it's not empty
+      if (email !== "" && !/^\S+@\S+\.\S+$/.test(email)) {
+        isValid = false;
+        errors.push("Andika email sahihi au acha tupu.");
+      }
+
+      // Validate phone
+      if (!/^\d{10}$/.test(phone)) {
+        isValid = false;
+        errors.push("Namba ya simu si sahihi. Tumia tarakimu pekee ( tarakimum 10).");
+      }
+
+      // Validate message
+      if (message.length < 5) {
+        isValid = false;
+        errors.push("Ujumbe wako ni mfupi sana.");
+      }
+
+      if (!isValid) {
+        event.preventDefault();
+        alert(errors.join("\n"));
+      }
+    });
+  });
+  
+    </script>
+    
+
+
+    
+ 
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+</html>

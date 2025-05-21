@@ -1,0 +1,151 @@
+header{
+    text-align: center;
+    color: green;
+}
+header {
+            padding: 2px;
+            overflow: hidden;
+            position: relative;
+            height: 40px;
+        }
+
+.scrolling-text {
+  width: 100%; 
+  overflow: hidden;
+  white-space: nowrap; 
+}
+
+.scrolling-text span {
+  display: inline-block; 
+  padding-left: 100%; 
+  font-size: 1.2em;
+  animation: scroll-left 15s linear infinite; 
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+  .background-img {
+    background-image: url('../images/back-img.jpg');
+    background-size: cover;
+    background-position: center;
+    height: auto;
+    max-height: 400px;}
+body{
+    background-color: rgb(240, 245, 245);
+}
+main{
+    width: 90%;
+    margin-left: 5%;
+}
+.slider-img{
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+a{
+  text-decoration: none;
+}
+.card{
+    display: inline-block;
+
+}
+.row{
+    margin-top: 50px;
+}
+.d-flex{
+    width:80%;
+}
+
+.filter .nav-link {
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.filter .nav-link:hover, 
+.filter .nav-link.active {
+    color: #0d6efd; 
+    border-bottom: 2px solid #0d6efd;
+}
+
+form.d-flex {
+    max-width: 600px;
+    margin: auto;
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff !important; 
+  }
+
+  .navbar-nav .nav-link:hover {
+    color: #f8f9fa; 
+    text-decoration: underline;
+  }
+  
+ /* sliding images */
+  .slider-img {
+      width: 60%;
+      margin: 0 auto;
+    }
+
+    .slider-img img {
+      height: auto; 
+      max-height: 400px; 
+      object-fit:cover; 
+    }
+
+    @media (max-width: 768px) {
+      .slider-img {
+        width: 100%; 
+        
+      }
+        .slider-img img {
+      height: auto; 
+      max-height: 300px; 
+      object-fit:cover; 
+    }
+   
+    }
+ 
+/* services styles */
+ .services {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .service-item {
+      flex: 1 1 250px;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 10px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      transition: transform 0.3s;
+    }
+
+    .service-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .service-item i {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #007bff;
+    }
+
+    .service-item p {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: #555;
+    }

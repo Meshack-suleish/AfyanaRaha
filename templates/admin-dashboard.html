@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: white;
+    }
+    .card-icon {
+      font-size: 2rem;
+      color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .card-data {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+       {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+<div class="container mt-5">
+  <h2 class="mb-4">Admin Dashboard</h2>
+
+  <div class="row g-4">
+
+    <!-- New Messages -->
+    <div class="col-md-6 col-xl-3">
+      <div class="card shadow-sm">
+        <div class="card-body d-flex align-items-center">
+          <div class="bg-primary card-icon me-3">
+            <i class="bi bi-envelope"></i>
+          </div>
+          <div>
+            <div class="card-title"> Messages</div>
+            <div class="card-data">{{ new_messages }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users -->
+    <div class="col-md-6 col-xl-3">
+      <div class="card shadow-sm">
+        <div class="card-body d-flex align-items-center">
+          <div class="bg-success card-icon me-3">
+            <i class="bi bi-people"></i>
+          </div>
+          <div>
+            <div class="card-title">Users</div>
+            <div class="card-data">{{ user_count }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Posts -->
+    <div class="col-md-6 col-xl-3">
+      <div class="card shadow-sm">
+        <div class="card-body d-flex align-items-center">
+          <div class="bg-warning card-icon me-3">
+            <i class="bi bi-file-earmark-text"></i>
+          </div>
+          <div>
+            <div class="card-title">Posts</div>
+            <div class="card-data">{{ post_count }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Orders -->
+    <div class="col-md-6 col-xl-3">
+      <div class="card shadow-sm">
+        <div class="card-body d-flex align-items-center">
+          <div class="bg-danger card-icon me-3">
+            <i class="bi bi-clock-history"></i>
+          </div>
+          <div>
+            <div class="card-title">Pending Orders</div>
+            <div class="card-data">{{ pending_orders }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
