@@ -55,28 +55,40 @@ def update_user():
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-@login_required
+
 @update_bp.route('/admin/update_post', methods=['POST'])
+@login_required
 def update_post():
     post_id = request.form['post_id']
     post = Posts.query.get(post_id)
 
-    if post:
-        post.title = request.form['title']
-        post.description = request.form['description']
-        post.category = request.form['category']
-        post.price = request.form['price']
+    if not post:
+        flash('Post not found.', 'error')
+        return redirect(url_for('admin.admin_dashboard'))
 
-        if 'image_url' in request.files:
-            image = request.files['image_url']
-            if image and allowed_file(image.filename):
-                filename = secure_filename(image.filename)
-                image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-                image.save(image_path)
-                post.image_url = filename  
+    post.title = request.form['title']
+    post.description = request.form['description']
+    post.category = request.form['category']
+    post.price = request.form['price']
 
+    file = request.files.get('image_url')
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        upload_folder = current_app.config['UPLOAD_FOLDER']
+
+            # Ensure upload folder exists
+        os.makedirs(upload_folder, exist_ok=True)
+
+        file_path = os.path.join(upload_folder, filename)
+        file.save(file_path)
+
+        image_url = os.path.relpath(file_path, start=current_app.static_folder).replace('\\', '/')
+        post.image_url = image_url
+    try:
         db.session.commit()
         flash('Post updated successfully.', 'success')
+    except:
+        flash('update failed!','danger')
 
     return redirect(url_for('admin.admin_dashboard', show='update'))
 
