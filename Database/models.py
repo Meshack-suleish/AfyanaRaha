@@ -32,6 +32,7 @@ class Posts(db.Model):
     image_url = db.Column(db.String(100))
     category = db.Column(db.String(100))
     created_at = Column(DateTime, server_default=text('CURRENT_TIMESTAMP'), nullable=False)
+    price = db.Column(db.String(200),nullable=True)
 
 
 

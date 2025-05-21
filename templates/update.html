@@ -141,6 +141,7 @@
               <th>Description</th>
               <th>Image</th>
               <th>Category</th>
+              <th>price</th>
               <th>Created At</th>
               <th>Actions</th>
             </tr>
@@ -160,6 +161,7 @@
                 {% endif %}
               </td>
               <td>{{ post.category }}</td>
+              <td>{{post.price}}</td>
               <td>{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
               <td>
                 <div class="d-flex gap-2">
@@ -216,10 +218,14 @@
                 <option value="">Select a category</option>
                 <option value="wanawake">Female Diseases</option>
                 <option value="wanaume">Male Diseases</option>
-                <option value="watoto">Children</option>
+                <!-- <option value="watoto">Children</option> -->
                 <option value="general">All</option>
               </select>
             </div>
+                <div class="mb-3">
+                    <label for="modalPrice" class="form-label">price(bei)</label>
+                    <input type="text" class="form-control" id="modalPrice" name="price" required>
+                </div> 
   
             <div class="mb-3">
               <label for="modalImage" class="form-label">Upload New Image (optional)</label>
@@ -256,6 +262,7 @@
       document.getElementById('modalTitle').value = this.dataset.title;
       document.getElementById('modalDescription').value = this.dataset.description;
       document.getElementById('modalCategory').value = this.dataset.category;
+      document.getElementById('modalPrice').value = this.dataset.price;
     });
   });
 

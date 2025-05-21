@@ -65,6 +65,7 @@ def update_post():
         post.title = request.form['title']
         post.description = request.form['description']
         post.category = request.form['category']
+        post.price = request.form['price']
 
         if 'image_url' in request.files:
             image = request.files['image_url']

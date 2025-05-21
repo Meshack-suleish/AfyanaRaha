@@ -63,6 +63,7 @@ def upload_item():
         description = request.form.get('description')
         user_id = current_user.user_id
         category = request.form['category']
+        price = request.form['price']
 
         # Validate form inputs
         if not title or not description or not user_id:
@@ -87,7 +88,8 @@ def upload_item():
                 title=title,
                 description=description,
                 category= category,
-                image_url=image_url  
+                image_url=image_url,
+                price=price
             )
 
             try:
